@@ -1,0 +1,9 @@
+*.pb.go
+/bin/
+/pkg/
+/transactionsorter
+/transactionsorter.exe
+/pricedbfetcher
+/pricedbfetcher.exe
+/questrademain
+/questrademain.exe
