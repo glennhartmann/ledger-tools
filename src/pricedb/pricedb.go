@@ -2,6 +2,7 @@ package pricedb
 
 import (
 	"fmt"
+	"io/ioutil"
 	"regexp"
 	"sort"
 	"strings"
@@ -13,8 +14,9 @@ import (
 )
 
 const (
-	DefaultFile    = "~/.price.db"
-	DateTimeFormat = "2006/01/02 15:04:05"
+	DefaultFile      = "~/.price.db"
+	DefaultCloseTime = "22:45:00"
+	DateTimeFormat   = "2006/01/02 15:04:05"
 
 	unquotedCommodityRxStr = `[^\s"]+`
 	quotedCommodityRxStr   = `"[^"]+"`
@@ -31,6 +33,28 @@ type PriceData struct {
 
 func (pd *PriceData) GetLastPrice() string {
 	return pd.LastPrice
+}
+
+func ReadPriceDB(path string) ([]string, error) {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, errors.Wrapf(err, "GetData(%s)", path)
+	}
+
+	sp := strings.Split(string(data), "\n")
+	ret := make([]string, 0, len(sp))
+	for _, line := range sp {
+		if !IsWhitespaceOrComment(line) {
+			ret = append(ret, line)
+		}
+	}
+
+	return ret, nil
+}
+
+func IsWhitespaceOrComment(s string) bool {
+	s2 := strings.TrimSpace(s)
+	return s2 == "" || strings.HasPrefix(s2, ";")
 }
 
 func GetSortedTimeSeriesItemWithSymbol(lines []string, closeTime string, symbolMap map[string]string) ([]*priceutils.TimeSeriesItemWithSymbol, error) {

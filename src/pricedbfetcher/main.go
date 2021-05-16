@@ -22,7 +22,7 @@ var (
 	alphavantageAPIKeyFile      = flag.String("alphavantage-api-key-file", alphavantage.DefaultAPIKeyFile, "Alpha Vantage API Key file location.")
 	priceDBFile                 = flag.String("price-db-file", pricedb.DefaultFile, "price.db file location.")
 	outFile                     = flag.String("out-path", pricedb.DefaultFile, "Where to write output. Empty means stdout. It's safe to make this the same as -price-db-file.")
-	closeTime                   = flag.String("close-time", lib.DefaultCloseTime, "The time to use for close prices.")
+	closeTime                   = flag.String("close-time", pricedb.DefaultCloseTime, "The time to use for close prices.")
 	alphavantageBackoffDuration = flag.Duration("alphavantage-backoff-duration", alphavantage.DefaultBackoffDuration, "How long to back off for after hitting the rate limit. Must be parseable by https://golang.org/pkg/time/#ParseDuration.")
 	alphavantageBackoffRetry    = flag.Int("alphavantage-backoff-retry", alphavantage.DefaultBackoffRetry, "Number of times to retry after hitting rate limit before giving up.")
 	questradeOAuthURLFmt        = flag.String("questrade-oauth-url-fmt", questrade.DefaultOAuthURLFmt, "Format-string for questrade OAuth URL.")

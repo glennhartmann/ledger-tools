@@ -19,10 +19,6 @@ import (
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 )
 
-const (
-	DefaultCloseTime = "22:45:00"
-)
-
 type Conn struct {
 	AlphavantageBaseURL         string
 	ConfigFile                  string
@@ -72,9 +68,9 @@ func (c *Conn) Fetch() error {
 	}
 	rc.AlphavantageAPIKey = strings.TrimSpace(string(alphavantageAPIKeyBytes))
 
-	priceDBData, err := readPriceDB(c.PriceDBFile)
+	priceDBData, err := pricedb.ReadPriceDB(c.PriceDBFile)
 	if err != nil {
-		return errors.Wrapf(err, "readPriceDB(%s)", c.PriceDBFile)
+		return errors.Wrapf(err, "pricedb.ReadPriceDB(%s)", c.PriceDBFile)
 	}
 	rc.PriceDBData = priceDBData
 
@@ -252,29 +248,6 @@ func (c *ResolvedConn) filterOutPreStartDate(sr []*priceutils.TimeSeriesItemWith
 		return nil
 	}
 	return sr[firstValid:]
-}
-
-func readPriceDB(path string) ([]string, error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, errors.Wrapf(err, "ioutil.ReadFile(%s)", path)
-	}
-
-	// TODO: is this necessary here? Maybe I can do that later.
-	sp := strings.Split(string(data), "\n")
-	ret := make([]string, 0, len(sp))
-	for _, line := range sp {
-		if !isWhitespaceOrComment(line) {
-			ret = append(ret, line)
-		}
-	}
-
-	return ret, nil
-}
-
-func isWhitespaceOrComment(s string) bool {
-	s2 := strings.TrimSpace(s)
-	return s2 == "" || strings.HasPrefix(s2, ";")
 }
 
 func spaces(commodityLength, maxCommodityLength int) string {
