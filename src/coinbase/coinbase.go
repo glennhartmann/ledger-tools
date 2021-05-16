@@ -8,9 +8,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/glennhartmann/ledger-tools/src/priceutils"
-
 	"github.com/pkg/errors"
+
+	"github.com/glennhartmann/ledger-tools/src/priceutils"
 )
 
 const (

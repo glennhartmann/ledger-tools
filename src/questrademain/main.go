@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 )
 
@@ -22,24 +23,27 @@ var (
 
 func main() {
 	flag.Parse()
-	setupHomeDir(tokenFile, accountNumbersFile)
+	if err := homedir.FillInHomeDir(tokenFile, accountNumbersFile); err != nil {
+		fmt.Fprintf(os.Stderr, "homedir.FillInHomeDir(): %+v\n", err)
+		os.Exit(1)
+	}
 	b, err := ioutil.ReadFile(*tokenFile)
 	if err != nil {
-		fmt.Printf("ioutil.ReadFile(%s): %v\n", *tokenFile, err)
+		fmt.Fprintf(os.Stderr, "ioutil.ReadFile(%s): %+v\n", *tokenFile, err)
 		os.Exit(1)
 	}
 	token := strings.TrimSpace(string(b))
 
 	b, err = ioutil.ReadFile(*accountNumbersFile)
 	if err != nil {
-		fmt.Printf("ioutil.ReadFile(%s): %v\n", *accountNumbersFile, err)
+		fmt.Fprintf(os.Stderr, "ioutil.ReadFile(%s): %+v\n", *accountNumbersFile, err)
 		os.Exit(1)
 	}
 	accountNumbers := strings.Split(strings.TrimSpace(string(b)), ",")
 
 	oauthResponse, err := questrade.Authenticate(token, *tokenFile, *oauthURLFmt)
 	if err != nil {
-		fmt.Printf("Authenticate(%s): %v\n", token, err)
+		fmt.Fprintf(os.Stderr, "Authenticate(%s): %+v\n", token, err)
 		os.Exit(1)
 	}
 
@@ -48,7 +52,7 @@ func main() {
 		symbolToSearch = strings.TrimSpace(symbolToSearch)
 		symbolResponse, err := questrade.FetchRawSymbol(oauthResponse, symbolToSearch, time.Time{} /* TODO */, time.Now())
 		if err != nil {
-			fmt.Printf("FetchRawSymbol(%s): %v\n", symbolToSearch, err)
+			fmt.Fprintf(os.Stderr, "FetchRawSymbol(%s): %+v\n", symbolToSearch, err)
 			os.Exit(1)
 		}
 
@@ -60,21 +64,12 @@ func main() {
 	for _, accountNumber := range accountNumbers {
 		positionsResponse, err := questrade.FetchRawPositions(oauthResponse, accountNumber)
 		if err != nil {
-			fmt.Printf("FetchRawPositions(%s): %v\n", accountNumber, err)
+			fmt.Fprintf(os.Stderr, "FetchRawPositions(%s): %+v\n", accountNumber, err)
 			os.Exit(1)
 		}
 
 		var out bytes.Buffer
 		json.Indent(&out, []byte(positionsResponse), "", "    ")
 		fmt.Printf("%s\n", out.String())
-	}
-}
-
-func setupHomeDir(paths ...*string) {
-	for _, path := range paths {
-		*path = strings.TrimSpace(*path)
-		if strings.HasPrefix(*path, "~/") {
-			*path = fmt.Sprintf("%s/%s", os.Getenv("HOME"), strings.TrimPrefix(*path, "~/"))
-		}
 	}
 }

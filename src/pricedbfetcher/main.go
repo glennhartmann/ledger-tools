@@ -9,6 +9,7 @@ import (
 
 	"github.com/glennhartmann/ledger-tools/src/alphavantage"
 	"github.com/glennhartmann/ledger-tools/src/coinbase"
+	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/pricedb"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 
@@ -33,7 +34,10 @@ var (
 
 func main() {
 	flag.Parse()
-	setupHomeDir(configFile, alphavantageAPIKeyFile, priceDBFile, outFile, questradeTokenFile, questradeAccountNumbersFile)
+	if err := homedir.FillInHomeDir(configFile, alphavantageAPIKeyFile, priceDBFile, outFile, questradeTokenFile, questradeAccountNumbersFile); err != nil {
+		fmt.Fprintf(os.Stderr, "homedir.FillInHomeDir(): %+v\n", err)
+		os.Exit(1)
+	}
 	c := &lib.Conn{
 		AlphavantageBaseURL:         *alphavantageBaseURL,
 		ConfigFile:                  *configFile,
@@ -50,17 +54,8 @@ func main() {
 		CoinbaseBaseURL:             *coinbaseBaseURL,
 	}
 	if err := c.Fetch(); err != nil {
-		fmt.Printf("error: %+v\n", err)
+		fmt.Fprintf(os.Stderr, "error: %+v\n", err)
 		os.Exit(1)
-	}
-}
-
-func setupHomeDir(paths ...*string) {
-	for _, path := range paths {
-		*path = strings.TrimSpace(*path)
-		if strings.HasPrefix(*path, "~/") {
-			*path = fmt.Sprintf("%s/%s", os.Getenv("HOME"), strings.TrimPrefix(*path, "~/"))
-		}
 	}
 }
 
@@ -70,7 +65,7 @@ func setupNow(n string) time.Time {
 	}
 	d, err := time.Parse(time.RFC3339, n)
 	if err != nil {
-		fmt.Printf("couldn't parse -now=%s (%v)\n", n, err)
+		fmt.Fprintf(os.Stderr, "couldn't parse -now=%s (%v)\n", n, err)
 		os.Exit(1)
 	}
 	return d

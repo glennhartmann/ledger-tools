@@ -9,12 +9,12 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Printf("wrong args\n")
+		fmt.Fprintf(os.Stderr, "wrong args\n")
 		os.Exit(1)
 	}
 
 	if err := lib.SortFile(os.Args[1]); err != nil {
-		fmt.Printf("error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error: %+v\n", err)
 		os.Exit(1)
 	}
 }
