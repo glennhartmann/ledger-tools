@@ -20,7 +20,7 @@ const (
 
 	unquotedCommodityRxStr = `[^\s"]+`
 	quotedCommodityRxStr   = `"[^"]+"`
-	lineRxFmt              = `^P\s+(\d\d\d\d\/\d\d\/\d\d \d\d:\d\d:\d\d)\s+((%s)|(%s))[^\d]+((\d,?)+(\.\d+)?)$`
+	lineRxFmt              = `^P\s+(\d\d\d\d\/\d\d\/\d\d \d\d:\d\d:\d\d)\s+((%s)|(%s))\s+([^\d]+)((\d,?)+(\.\d+)?)$`
 )
 
 var (
@@ -28,11 +28,16 @@ var (
 )
 
 type PriceData struct {
-	LastPrice string
+	LastPrice    string
+	LastCurrency string
 }
 
 func (pd *PriceData) GetLastPrice() string {
 	return pd.LastPrice
+}
+
+func (pd *PriceData) String() string {
+	return fmt.Sprintf("{%q, %q}", pd.LastPrice, pd.LastCurrency)
 }
 
 func ReadPriceDB(path string) ([]string, error) {
@@ -67,15 +72,17 @@ func GetDedupedSortedTimeSeriesItemWithSymbol(lines []string, closeTime string, 
 	for _, line := range lines {
 		tl := strings.TrimSpace(line)
 		r := lineRx.FindStringSubmatch(tl)
-		if len(r) != 8 {
-			return nil, errors.Errorf("expected 6 Rx submatches, got %d (line: %s)", len(r), line)
+		const expectedMatches = 9
+		if len(r) != expectedMatches {
+			return nil, errors.Errorf("expected %d Rx submatches, got %d (line: %s)", expectedMatches, len(r), line)
 		}
 		dateTimeStr := r[1]
 		symbol := r[2]
 		if s, ok := symbolMap[symbol]; ok {
 			symbol = s
 		}
-		price := r[5]
+		currency := r[5]
+		price := r[6]
 		dts := strings.Split(dateTimeStr, " ")
 		if len(dts) != 2 {
 			return nil, errors.Errorf("expected 2 string split pieces, got %d", len(dts))
@@ -87,7 +94,7 @@ func GetDedupedSortedTimeSeriesItemWithSymbol(lines []string, closeTime string, 
 		}
 		fds := formatDateSymbol(d, symbol)
 		if _, ok := ds[fds]; !ok || timeOnlyStr < closeTime {
-			ret = append(ret, &priceutils.TimeSeriesItemWithSymbol{d, symbol, &PriceData{price}})
+			ret = append(ret, &priceutils.TimeSeriesItemWithSymbol{d, symbol, &PriceData{price, currency}})
 		}
 	}
 	sort.Sort(priceutils.TimeSeriesItemWithSymbolSorter{ret})
