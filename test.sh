@@ -1,2 +1,2 @@
 #!/bin/bash
-go test github.com/glennhartmann/ledger-scripts/src/transactionsorter/lib
+go test github.com/glennhartmann/ledger-tools/src/transactionsorter/lib
