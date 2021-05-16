@@ -20,6 +20,12 @@ Note that this tool is currently quite limited - it only understands basic trans
 
 See [pricedbfetcher README](src/pricedbfetcher/README.md).
 
+## pricedbtocsv
+
+Usage: `./pricedbtocsv [-close-time=<time in '22:45:00' format>] [-price-db-file=<path>]`
+
+As the name suggests, this tool converts a ledger-cli price-db file (see [here](https://github.com/glennhartmann/ledger-tools/tree/master/src/pricedbfetcher#pricedb) for more details) into CSV data. The CSV data is printed to stdout, so you may want to redirect it to a file.
+
 ## questrademain
 
 Mostly just for testing the Questrade API.

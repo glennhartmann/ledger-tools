@@ -40,8 +40,13 @@ func (pd *PriceData) String() string {
 	return fmt.Sprintf("{%q, %q}", pd.LastPrice, pd.LastCurrency)
 }
 
+var (
+	// overridable for testing
+	GetData = ioutil.ReadFile
+)
+
 func ReadPriceDB(path string) ([]string, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := GetData(path)
 	if err != nil {
 		return nil, errors.Wrapf(err, "GetData(%s)", path)
 	}
