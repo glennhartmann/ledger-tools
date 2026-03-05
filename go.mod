@@ -1,8 +1,8 @@
 module github.com/glennhartmann/ledger-tools
 
-go 1.14
+go 1.25.4
 
 require (
 	github.com/pkg/errors v0.9.1
-	github.com/prashantv/gostub v1.0.0 // indirect
+	github.com/prashantv/gostub v1.1.0 // indirect
 )
