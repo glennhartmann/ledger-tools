@@ -1,0 +1,46 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version: 1.25.4
+
+    - name: Build transactionsorter
+      run: go build -v -mod=readonly github.com/glennhartmann/ledger-tools/src/transactionsorter
+
+    - name: Build pricedbfetcher
+      run: go build -v -mod=readonly github.com/glennhartmann/ledger-tools/src/pricedbfetcher
+
+    - name: Build questrademain
+      run: go build -v -mod=readonly github.com/glennhartmann/ledger-tools/src/questrademain
+
+    - name: Build pricedbtocsv
+      run: go build -v -mod=readonly github.com/glennhartmann/ledger-tools/src/pricedbtocsv
+
+    - name: Test transactionsorter
+      run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/transactionsorter
+
+    - name: Test pricedbfetcher
+      run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/pricedbfetcher
+
+    - name: Test questrademain
+      run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/questrademain
+
+    - name: Test pricedbtocsv
+      run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/pricedbtocsv
