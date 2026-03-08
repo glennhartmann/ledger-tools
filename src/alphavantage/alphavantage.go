@@ -106,7 +106,8 @@ func (c *Conn) fetchType(symbols []string, function string, responsePrototype Re
 }
 
 type rateLimitResponse struct {
-	Note string `json:"Note"`
+	Note        string `json:"Note"`
+	Information string `json:"Information"`
 }
 
 func (c *Conn) fetchSymbolWithBackoff(symbol string, function string, responsePrototype Response) (Response, error) {
@@ -161,7 +162,7 @@ func (c *Conn) fetchSymbol(symbol string, function string, responsePrototype Res
 	if err := json.Unmarshal(responseBody, &rls); err != nil {
 		return nil, false, errors.Wrapf(err, "json.Unmarshal(ratelimit %s %s response)", symbol, function)
 	}
-	if strings.Contains(rls.Note, "API call frequency") {
+	if strings.Contains(rls.Note, "API call frequency") || strings.Contains(rls.Information, "free API requests more sparingly") {
 		return nil, true, nil
 	}
 
