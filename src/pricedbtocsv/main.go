@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -9,11 +8,13 @@ import (
 	"github.com/glennhartmann/ledger-tools/src/pricedb"
 
 	"github.com/glennhartmann/ledger-tools/src/pricedbtocsv/lib"
+
+	flag "github.com/spf13/pflag"
 )
 
 var (
-	closeTime   = flag.String("close-time", pricedb.DefaultCloseTime, "The time to use for close prices.")
-	priceDBFile = flag.String("price-db-file", pricedb.DefaultFile, "price.db file location.")
+	closeTime   = flag.StringP("close-time", "c", pricedb.DefaultCloseTime, "The time to use for close prices.")
+	priceDBFile = flag.StringP("price-db-file", "p", pricedb.DefaultFile, "price.db file location.")
 )
 
 func main() {

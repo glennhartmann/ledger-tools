@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -14,21 +13,23 @@ import (
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 
 	"github.com/glennhartmann/ledger-tools/src/pricedbfetcher/lib"
+
+	flag "github.com/spf13/pflag"
 )
 
 var (
 	alphavantageBaseURL         = flag.String("alphavantage-base-url", alphavantage.DefaultBaseURL, "Alpha Vantage base URL (not including query string) to fetch from.")
-	configFile                  = flag.String("config-file", "~/.pricedbfetcher_config", "Config file location.")
-	alphavantageAPIKeyFile      = flag.String("alphavantage-api-key-file", alphavantage.DefaultAPIKeyFile, "Alpha Vantage API Key file location.")
-	priceDBFile                 = flag.String("price-db-file", pricedb.DefaultFile, "price.db file location.")
-	outFile                     = flag.String("out-path", pricedb.DefaultFile, "Where to write output. Empty means stdout. It's safe to make this the same as -price-db-file.")
-	closeTime                   = flag.String("close-time", pricedb.DefaultCloseTime, "The time to use for close prices.")
-	alphavantageBackoffDuration = flag.Duration("alphavantage-backoff-duration", alphavantage.DefaultBackoffDuration, "How long to back off for after hitting the rate limit. Must be parseable by https://golang.org/pkg/time/#ParseDuration.")
-	alphavantageBackoffRetry    = flag.Int("alphavantage-backoff-retry", alphavantage.DefaultBackoffRetry, "Number of times to retry after hitting rate limit before giving up.")
+	configFile                  = flag.StringP("config-file", "c", "~/.pricedbfetcher_config", "Config file location.")
+	alphavantageAPIKeyFile      = flag.StringP("alphavantage-api-key-file", "a", alphavantage.DefaultAPIKeyFile, "Alpha Vantage API Key file location.")
+	priceDBFile                 = flag.StringP("price-db-file", "p", pricedb.DefaultFile, "price.db file location.")
+	outFile                     = flag.StringP("out-path", "o", pricedb.DefaultFile, "Where to write output. Empty means stdout. It's safe to make this the same as -price-db-file.")
+	closeTime                   = flag.StringP("close-time", "e", pricedb.DefaultCloseTime, "The time to use for close prices.")
+	alphavantageBackoffDuration = flag.DurationP("alphavantage-backoff-duration", "b", alphavantage.DefaultBackoffDuration, "How long to back off for after hitting the rate limit. Must be parseable by https://golang.org/pkg/time/#ParseDuration.")
+	alphavantageBackoffRetry    = flag.IntP("alphavantage-backoff-retry", "r", alphavantage.DefaultBackoffRetry, "Number of times to retry after hitting rate limit before giving up.")
 	questradeOAuthURLFmt        = flag.String("questrade-oauth-url-fmt", questrade.DefaultOAuthURLFmt, "Format-string for questrade OAuth URL.")
-	questradeTokenFile          = flag.String("questrade-token-file", questrade.DefaultTokenFile, "File to find questrade OAuth token.")
-	questradeAccountNumbersFile = flag.String("questrade-account-numbers-file", questrade.DefaultAccountNumbersFile, "File to find questrade account numbers.")
-	now                         = flag.String("now", "", fmt.Sprintf("Override 'time.Now()' value if not blank. Must be RFC3339 ('%s') format.", time.RFC3339))
+	questradeTokenFile          = flag.StringP("questrade-token-file", "t", questrade.DefaultTokenFile, "File to find questrade OAuth token.")
+	questradeAccountNumbersFile = flag.StringP("questrade-account-numbers-file", "q", questrade.DefaultAccountNumbersFile, "File to find questrade account numbers.")
+	now                         = flag.StringP("now", "n", "", fmt.Sprintf("Override 'time.Now()' value if not blank. Must be RFC3339 ('%s') format.", time.RFC3339))
 	coinbaseBaseURL             = flag.String("coinbase-base-url", coinbase.DefaultBaseURL, "Coinbase base API URL.")
 )
 

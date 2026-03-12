@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -12,13 +11,15 @@ import (
 
 	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
+
+	flag "github.com/spf13/pflag"
 )
 
 var (
-	tokenFile          = flag.String("token-file", questrade.DefaultTokenFile, "File where questrade token is stored.")
-	accountNumbersFile = flag.String("account-numbers-file", questrade.DefaultAccountNumbersFile, "File where questrade account numbers (comma-separated) are stored.")
-	syms               = flag.String("symbols", "BND,ZAG.TO", "Symbols (comma-separated) to search for.")
-	oauthURLFmt        = flag.String("oauth-url-fmt", questrade.DefaultOAuthURLFmt, "Format-string for questrade oauth API URL.")
+	tokenFile          = flag.StringP("token-file", "t", questrade.DefaultTokenFile, "File where questrade token is stored.")
+	accountNumbersFile = flag.StringP("account-numbers-file", "a", questrade.DefaultAccountNumbersFile, "File where questrade account numbers (comma-separated) are stored.")
+	syms               = flag.StringP("symbols", "s", "BND,ZAG.TO", "Symbols (comma-separated) to search for.")
+	oauthURLFmt        = flag.StringP("oauth-url-fmt", "o", questrade.DefaultOAuthURLFmt, "Format-string for questrade oauth API URL.")
 )
 
 func main() {
