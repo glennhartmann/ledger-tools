@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
 	"sort"
 	"strings"
 	"text/template"
@@ -14,18 +15,20 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/glennhartmann/ledger-tools/src/common"
 	"github.com/glennhartmann/ledger-tools/src/priceutils"
 )
 
 const (
-	DefaultOAuthURLFmt        = "https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=%s"
-	DefaultTokenFile          = "~/.questrade_token"
-	DefaultAccountNumbersFile = "~/.questrade_account_numbers"
+	DefaultOAuthURLFmt = "https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=%s"
 
 	dateTimeFormat = "2006-01-02T15:04:05.999999-07:00"
 )
 
 var (
+	DefaultTokenFile          = filepath.Join(common.DefaultConfigDir, "questrade_token")
+	DefaultAccountNumbersFile = filepath.Join(common.DefaultConfigDir, "questrade_account_numbers")
+
 	symbolQueryTemplate = template.Must(template.New("query").Parse("v1/markets/candles/{{.SymbolID}}?startTime={{.StartTime}}&endTime={{.EndTime}}&interval=OneDay"))
 )
 

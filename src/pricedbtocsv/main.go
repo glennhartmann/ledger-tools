@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/pricedb"
 
 	"github.com/glennhartmann/ledger-tools/src/pricedbtocsv/lib"
@@ -19,11 +18,6 @@ var (
 
 func main() {
 	flag.Parse()
-	if err := homedir.FillInHomeDir(priceDBFile); err != nil {
-		fmt.Fprintf(os.Stderr, "homedir.FillInHomeDir(): %+v\n", err)
-		os.Exit(1)
-	}
-
 	if err := lib.ToCSV(*priceDBFile, *closeTime); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %+v\n", err)
 		os.Exit(1)

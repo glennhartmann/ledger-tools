@@ -12,7 +12,7 @@
           pname = "ledger-tools";
           version = "v0.2.0";
           src = builtins.path { path = ./.; name = "ledger-tools"; };
-          vendorHash = "sha256-HUgD+Sv3gIU6kHJyZiUVWYQfAlRfqG8yRxe1d8dmRi8=";
+          vendorHash = "sha256-l9xtWlElSPxnpXILWOIg5XTdJIqjRZkGtl9lHZ1HLgw=";
         };
       in
       {

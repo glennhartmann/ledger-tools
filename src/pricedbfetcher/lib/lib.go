@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -14,10 +15,13 @@ import (
 
 	"github.com/glennhartmann/ledger-tools/src/alphavantage"
 	"github.com/glennhartmann/ledger-tools/src/coinbase"
+	"github.com/glennhartmann/ledger-tools/src/common"
 	"github.com/glennhartmann/ledger-tools/src/pricedb"
 	"github.com/glennhartmann/ledger-tools/src/priceutils"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 )
+
+var DefaultConfigFile = filepath.Join(common.DefaultConfigDir, "pricedbfetcher_config")
 
 type Conn struct {
 	AlphavantageBaseURL         string

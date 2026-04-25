@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 
 	flag "github.com/spf13/pflag"
@@ -24,10 +23,6 @@ var (
 
 func main() {
 	flag.Parse()
-	if err := homedir.FillInHomeDir(tokenFile, accountNumbersFile); err != nil {
-		fmt.Fprintf(os.Stderr, "homedir.FillInHomeDir(): %+v\n", err)
-		os.Exit(1)
-	}
 	b, err := ioutil.ReadFile(*tokenFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ioutil.ReadFile(%s): %+v\n", *tokenFile, err)

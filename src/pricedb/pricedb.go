@@ -3,6 +3,7 @@ package pricedb
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -10,11 +11,11 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/glennhartmann/ledger-tools/src/common"
 	"github.com/glennhartmann/ledger-tools/src/priceutils"
 )
 
 const (
-	DefaultFile      = "~/.price.db"
 	DefaultCloseTime = "22:45:00"
 	DateTimeFormat   = "2006/01/02 15:04:05"
 
@@ -24,6 +25,8 @@ const (
 )
 
 var (
+	DefaultFile = filepath.Join(common.DefaultDataDir, "price.db")
+
 	lineRx = regexp.MustCompile(fmt.Sprintf(lineRxFmt, unquotedCommodityRxStr, quotedCommodityRxStr))
 )
 

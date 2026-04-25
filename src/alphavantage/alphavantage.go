@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
 	"sort"
 	"strings"
 	"text/template"
@@ -14,17 +15,19 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/glennhartmann/ledger-tools/src/common"
 	"github.com/glennhartmann/ledger-tools/src/priceutils"
 )
 
 const (
 	DefaultBaseURL         = "https://www.alphavantage.co/query"
-	DefaultAPIKeyFile      = "~/.alphavantage_api_key"
 	DefaultBackoffDuration = 1 * time.Minute
 	DefaultBackoffRetry    = 3
 )
 
 var (
+	DefaultAPIKeyFile = filepath.Join(common.DefaultConfigDir, "alphavantage_api_key")
+
 	queryTemplate = template.Must(template.New("query").Parse("?function={{.Function}}&symbol={{.Symbol}}&from_symbol={{.FromSymbol}}&to_symbol=CAD&market=CAD&outputsize=full&apikey={{.APIKey}}"))
 )
 

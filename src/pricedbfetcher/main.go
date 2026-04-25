@@ -8,7 +8,6 @@ import (
 
 	"github.com/glennhartmann/ledger-tools/src/alphavantage"
 	"github.com/glennhartmann/ledger-tools/src/coinbase"
-	"github.com/glennhartmann/ledger-tools/src/homedir"
 	"github.com/glennhartmann/ledger-tools/src/pricedb"
 	"github.com/glennhartmann/ledger-tools/src/questrade"
 
@@ -19,7 +18,7 @@ import (
 
 var (
 	alphavantageBaseURL         = flag.String("alphavantage-base-url", alphavantage.DefaultBaseURL, "Alpha Vantage base URL (not including query string) to fetch from.")
-	configFile                  = flag.StringP("config-file", "c", "~/.pricedbfetcher_config", "Config file location.")
+	configFile                  = flag.StringP("config-file", "c", lib.DefaultConfigFile, "Config file location.")
 	alphavantageAPIKeyFile      = flag.StringP("alphavantage-api-key-file", "a", alphavantage.DefaultAPIKeyFile, "Alpha Vantage API Key file location.")
 	priceDBFile                 = flag.StringP("price-db-file", "p", pricedb.DefaultFile, "price.db file location.")
 	outFile                     = flag.StringP("out-path", "o", pricedb.DefaultFile, "Where to write output. Empty means stdout. It's safe to make this the same as -price-db-file.")
@@ -35,10 +34,6 @@ var (
 
 func main() {
 	flag.Parse()
-	if err := homedir.FillInHomeDir(configFile, alphavantageAPIKeyFile, priceDBFile, outFile, questradeTokenFile, questradeAccountNumbersFile); err != nil {
-		fmt.Fprintf(os.Stderr, "homedir.FillInHomeDir(): %+v\n", err)
-		os.Exit(1)
-	}
 	c := &lib.Conn{
 		AlphavantageBaseURL:         *alphavantageBaseURL,
 		ConfigFile:                  *configFile,
