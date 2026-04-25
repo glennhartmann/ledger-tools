@@ -6,6 +6,8 @@ This is a small collection of utility scripts to help managing [ledger-cli](http
 
 `transactionsorter`, `pricedbfetcher`, and `questrademain` are written in [Go](https://golang.org/). Download a copy of the Go compiler, and run `./build.sh`.
 
+Or, better yet, install [Nix](https://en.wikipedia.org/wiki/Nix_(package_manager)) and build with `nix build`.
+
 ## transactionsorter
 
 Usage: `./transactionsorter <file>`.
