@@ -1,4 +1,3 @@
-*.pb.go
 /bin/
 /pkg/
 /transactionsorter
@@ -9,4 +8,6 @@
 /questrademain.exe
 /pricedbtocsv
 /pricedbtocsv.exe
+/pricedbmain
+/pricedbmain.exe
 /result

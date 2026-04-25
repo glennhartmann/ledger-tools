@@ -1,9 +1,14 @@
+//go:generate protoc --proto_path=. --go_out=. --go_opt=paths=source_relative proto/priceutils.proto
 package priceutils
 
 import (
 	"bytes"
 	"fmt"
 	"time"
+
+	pb "github.com/glennhartmann/ledger-tools/src/priceutils/proto"
+
+	"google.golang.org/protobuf/proto"
 )
 
 type PriceData interface {
@@ -27,6 +32,16 @@ func (tsiws *TimeSeriesItemWithSymbol) String() string {
 	return fmt.Sprintf("{%q, %q, %s}", tsiws.Date.String(), tsiws.Symbol, pds)
 }
 
+func (tsiws *TimeSeriesItemWithSymbol) ToProto() *pb.TimeSeriesItemWithSymbol {
+	return pb.TimeSeriesItemWithSymbol_builder{
+		TimeInUnixMicros: proto.Int64(tsiws.Date.UnixMicro()),
+		Symbol:           proto.String(tsiws.Symbol),
+		Data: pb.PriceData_builder{
+			LastPrice: proto.String(tsiws.Data.GetLastPrice()),
+		}.Build(),
+	}.Build()
+}
+
 type TimeSeriesItemWithSymbolSlice []*TimeSeriesItemWithSymbol
 
 func (tsiwss TimeSeriesItemWithSymbolSlice) String() string {
@@ -39,6 +54,16 @@ func (tsiwss TimeSeriesItemWithSymbolSlice) String() string {
 	fmt.Fprintf(&b, "}")
 
 	return b.String()
+}
+
+func (tsiwss TimeSeriesItemWithSymbolSlice) ToProto() *pb.TimeSeriesWithSymbol {
+	items := make([]*pb.TimeSeriesItemWithSymbol, 0, len(tsiwss))
+	for _, item := range tsiwss {
+		items = append(items, item.ToProto())
+	}
+	return pb.TimeSeriesWithSymbol_builder{
+		Items: items,
+	}.Build()
 }
 
 type TimeSeriesItemWithSymbolSorter struct {

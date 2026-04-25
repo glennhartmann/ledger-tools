@@ -1,0 +1,19 @@
+edition = "2024";
+
+package proto;
+
+option go_package = "github.com/glennhartmann/ledger-tools/src/priceutils/proto";
+
+message PriceData {
+  string last_price = 1;
+}
+
+message TimeSeriesItemWithSymbol {
+  int64 time_in_unix_micros = 1;
+  string symbol = 2;
+  PriceData data = 3;
+}
+
+message TimeSeriesWithSymbol {
+	repeated TimeSeriesItemWithSymbol items = 1;
+}

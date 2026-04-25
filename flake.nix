@@ -10,15 +10,29 @@
         pkgs = import nixpkgs { inherit system; };
         ledger-tools = pkgs.buildGoModule {
           pname = "ledger-tools";
-          version = "v0.3.0";
+          version = "v0.4.0";
           src = builtins.path { path = ./.; name = "ledger-tools"; };
-          vendorHash = "sha256-l9xtWlElSPxnpXILWOIg5XTdJIqjRZkGtl9lHZ1HLgw=";
+          vendorHash = "sha256-yfZajz354QB0bHN2GPuKSx30bmiJmXfADhJNbPcA3Ew=";
+        };
+
+        ledger-tools-shell = pkgs.mkShell {
+          inputsFrom = [ ledger-tools ];
+          packages = with pkgs; [
+            fd
+            gotools
+            protobuf
+            protoc-gen-go
+          ];
         };
       in
       {
         packages = {
           inherit ledger-tools;
           default = ledger-tools;
+        };
+        devShells = {
+          inherit ledger-tools-shell;
+          default = ledger-tools-shell;
         };
       }
     );

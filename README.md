@@ -32,6 +32,12 @@ As the name suggests, this tool converts a ledger-cli price-db file (see [here](
 
 Mostly just for testing the Questrade API.
 
+## pricedbmain
+
+Usage: `./pricedbmain [--close-time=<time in '22:45:00' format>] [--price-db-path=<path>] [--output-type=<"json"|"proto-text"|"proto-wire">]`
+
+This utility parses the price-db file, converts it into a slice of [TimeSeriesItemWithSymbol](https://github.com/glennhartmann/ledger-tools/blob/4da12d9f8197ae0b0a3ad38c1c418d34b2a3a403/src/priceutils/priceutils.go#L13), and then outputs it in a [protocol buffer](https://en.wikipedia.org/wiki/Protocol_Buffers) [format](https://github.com/glennhartmann/ledger-tools/blob/master/src/priceutils/proto/priceutils.proto) for storage or consumption by other programs.
+
 ## networthbyday
 
 [networthbyday.py](https://github.com/glennhartmann/ledger-tools/blob/master/misc/networthbyday.py) computes a one-row-per-day CSV file of total Assets minus total Liabilities.
