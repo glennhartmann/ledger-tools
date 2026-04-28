@@ -47,3 +47,6 @@ jobs:
 
     - name: Test pricedbtocsv
       run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/pricedbtocsv
+
+    - name: Test fs
+      run: go test -v -mod=readonly github.com/glennhartmann/ledger-tools/src/fs

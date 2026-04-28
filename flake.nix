@@ -10,9 +10,9 @@
         pkgs = import nixpkgs { inherit system; };
         ledger-tools = pkgs.buildGoModule {
           pname = "ledger-tools";
-          version = "v0.4.0";
+          version = "v0.5.0";
           src = builtins.path { path = ./.; name = "ledger-tools"; };
-          vendorHash = "sha256-yfZajz354QB0bHN2GPuKSx30bmiJmXfADhJNbPcA3Ew=";
+          vendorHash = "sha256-HPcteUQizKNgBjxfSlMCVPjGlDOjX1KUhKllF0VQlUY=";
         };
 
         ledger-tools-shell = pkgs.mkShell {
